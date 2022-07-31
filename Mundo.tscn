@@ -1,0 +1,103 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Mundo.gd" type="Script" id=1]
+[ext_resource path="res://Roca.tscn" type="PackedScene" id=2]
+[ext_resource path="res://sprites/spr_espacio.png" type="Texture" id=3]
+[ext_resource path="res://Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Interfaz.tscn" type="PackedScene" id=5]
+[ext_resource path="res://snd_lose.wav" type="AudioStream" id=6]
+[ext_resource path="res://snd_music.ogg" type="AudioStream" id=7]
+[ext_resource path="res://sprites/base_botones.png" type="Texture" id=8]
+[ext_resource path="res://sprites/Arrow.png" type="Texture" id=9]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 0.0916748, -2.86063, 0, 0, 0, 0, 638.751, -1.42865, 0, 0, 0, 0, 638.858, 959.552, 0, 0, 0, 0, -2.15747, 957.965, 0, 0, 0, 0, 0.0916748, -2.86063 )
+}
+
+[node name="Mundo" type="Node"]
+script = ExtResource( 1 )
+Roca = ExtResource( 2 )
+
+[node name="Fondo" type="TextureRect" parent="."]
+margin_right = 642.0
+margin_bottom = 962.0
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player" parent="." instance=ExtResource( 4 )]
+position = Vector2( 322.572, 211.175 )
+
+[node name="RocaTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[node name="InicioTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="PosicionDeInicio" type="Position2D" parent="."]
+position = Vector2( 320, 480 )
+
+[node name="Camino" type="Path2D" parent="."]
+curve = SubResource( 1 )
+
+[node name="RocaPosicion" type="PathFollow2D" parent="Camino"]
+position = Vector2( 0.0916748, -2.86063 )
+rotation = 0.00224209
+
+[node name="Interfaz" parent="." instance=ExtResource( 5 )]
+
+[node name="bUp" parent="Interfaz/Botones/Control_buttons" index="0"]
+position = Vector2( 873.077, 1147 )
+rotation = -1.5708
+scale = Vector2( 1, 1 )
+normal = ExtResource( 9 )
+
+[node name="bDown" parent="Interfaz/Botones/Control_buttons" index="1"]
+position = Vector2( 1019.36, 1120.8 )
+rotation = 1.5708
+scale = Vector2( 1, 1 )
+normal = ExtResource( 9 )
+
+[node name="bLeft" parent="Interfaz/Botones/Control_buttons" index="2"]
+position = Vector2( 878.493, 1236.46 )
+rotation = 3.14159
+scale = Vector2( 1, 1 )
+normal = ExtResource( 9 )
+
+[node name="bRight" parent="Interfaz/Botones/Control_buttons" index="3"]
+position = Vector2( 1007.43, 1087.26 )
+scale = Vector2( 1, 1 )
+normal = ExtResource( 9 )
+
+[node name="AudioMuerte" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+
+[node name="Musica" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( -4.42603, 950.852 )
+scale = Vector2( 1, 1.32243 )
+texture = ExtResource( 8 )
+centered = false
+
+[connection signal="golpe" from="Player" to="." method="game_over"]
+[connection signal="timeout" from="RocaTimer" to="." method="_on_RocaTimer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_ScoreTimer_timeout"]
+[connection signal="timeout" from="InicioTimer" to="." method="_on_InicioTimer_timeout"]
+[connection signal="iniciar_juego" from="Interfaz" to="." method="nuevo_juego"]
+[connection signal="pressed" from="Interfaz/Botones/Control_buttons/bUp" to="Player" method="_on_bUp_pressed"]
+[connection signal="released" from="Interfaz/Botones/Control_buttons/bUp" to="Player" method="_on_bUp_released"]
+[connection signal="pressed" from="Interfaz/Botones/Control_buttons/bDown" to="Player" method="_on_bDown_pressed"]
+[connection signal="released" from="Interfaz/Botones/Control_buttons/bDown" to="Player" method="_on_bDown_released"]
+[connection signal="pressed" from="Interfaz/Botones/Control_buttons/bLeft" to="Player" method="_on_bLeft_pressed"]
+[connection signal="released" from="Interfaz/Botones/Control_buttons/bLeft" to="Player" method="_on_bLeft_released"]
+[connection signal="pressed" from="Interfaz/Botones/Control_buttons/bRight" to="Player" method="_on_bRight_pressed"]
+[connection signal="released" from="Interfaz/Botones/Control_buttons/bRight" to="Player" method="_on_bRight_released"]
+
+[editable path="Interfaz"]
